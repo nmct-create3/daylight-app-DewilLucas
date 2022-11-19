@@ -6,18 +6,25 @@ let timeLeftElement;
 let totalTime = 0;
 // place sun on left and bottom position
 // based on total and current time
-const placeSun = () => {
+const placeSun = (city) => {
 	const now = new Date();
-	const totalDate = new Date(totalTime * 1000);
 
-	const minutesLeft = now.getHours() * 60 + totalDate.getMinutes() - (totalDate.getHours() * 60 + totalDate.getMinutes());
-	const percentage = (totalTime / 100) * minutesLeft;
+	const sunrise = new Date(city.sunrise * 1000);
+	const sunset = new Date(city.sunset * 1000);
 
-	const sunLeft = percentage;
-	const sunBottom = percentage > 50 ? 100 - percentage : percentage * 2;
+	const totalMinutesDayTime = (sunset.getHours() * 60 + sunset.getMinutes()) - (sunrise.getHours() * 60 + sunrise.getMinutes());
 
-	sunElement.style.left = `${sunLeft}%`;
-	sunElement.style.bottom = `${sunBottom}%`;
+	const timeNow = (now.getHours() * 60 + now.getMinutes()) - (sunrise.getHours() * 60 + sunrise.getMinutes());  // tijd nu tenopzichte van zonsopgang
+
+	const percentage = timeNow / totalMinutesDayTime * 100;
+
+	const sunLeftPosition = percentage;
+	const sunBottomPosition = percentage > 50 ? 100 - percentage : percentage * 2;
+
+	sunElement.style.left = `${sunLeftPosition}%`;
+	sunElement.style.bottom = `${sunBottomPosition}%`;
+
+	updateTimeAndTimeLeft((sunset.getHours() * 60 + sunset.getMinutes()) - (now.getHours() * 60 + now.getMinutes()));
 };
 
 
